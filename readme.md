@@ -22,11 +22,6 @@ Faz a cópia dos arquivos de configuração.
 ```
 Inicia os containers Docker.
 
-```
-./bin/mysql
-```
-Cria o banco de dados.
-
 ## Demais execuções
 
 ```
@@ -49,25 +44,3 @@ Cria a chave da aplicação.
 ```
 Instala as migrações e seeders.
 
-```
-./bin/artisan jwt:secret
-```
-Gera a chave jwt da aplicação.
-
-A aplicação já pode ser acessada via Postman ou outro serviço de acesso a API Restfull. O endpoint Login gera um hash para acesso aos demais endpoints.
-
-```
-Exemplo o endpoint POST {HOST}/api/v1/login
-
-Body
-Key => email - Value => jonathan.ribeiro@deeds.com.br
-Key => password - Value => 123456
-
-Gerou o hash => HQkk2Ivs40honcrnItN6iXgCgNikIcy8
-```
-
-Para acessar o demais endpoits é necessário informar o hash acima no cabeçalho.
-```
-Exemplo o endpoint GET {HOST}/api/v1/produtos
-Header => Bearer HQkk2Ivs40honcrnItN6iXgCgNikIcy8
-```
