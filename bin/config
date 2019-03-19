@@ -1,0 +1,7 @@
+#!/bin/bash
+cd "$(dirname "$0")/.."
+
+cp docker-compose.example.yml docker-compose.yml
+cp .env.example .env
+cd src
+cp .env.example .env
