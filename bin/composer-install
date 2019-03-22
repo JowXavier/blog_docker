@@ -1,7 +1,0 @@
-#!/bin/bash
-cd "$(dirname "$0")/.."
-
-cd ../
-chmod 777 -R app
-cd app
-docker-compose exec app bash -c "composer install"

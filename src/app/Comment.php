@@ -12,5 +12,8 @@ class Comment extends Model
         'description'
     ];
 
-
+    public function usuario()
+    {
+        return $this->belongsTo('Blog\User', 'user_id');
+    }
 }

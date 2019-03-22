@@ -2,6 +2,11 @@
 
 @section('content')
     <div class="container-fluid ">
+        @if( session( 'error' ) )
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="row justify-content-center p-5">
             <div class='col-lg-12 p-0'>
                 <nav aria-label='breadcrumb'>
@@ -19,21 +24,27 @@
                 </div>
                 <br />
                 @if(!isset($tag->id))
-                    {!! Form::open(['url' => 'tag/store', 'id' => 'form_cadastro_tag', 'name' => 'form_cadastro']) !!}
+                    {!! Form::open(['route' => 'tag.store']) !!}
                 @else
-                    {!! Form::model($tag, ['url' => 'tag/store', 'id' => 'form_cadastro_tag', 'name' => 'form_cadastro']) !!}
-                    {!! Form::input('hidden','id', $tag->id) !!}
+                    {!! Form::model($tag, ['method' => 'PATCH', 'route' => ['tag.update', $tag->id]]) !!}
                 @endif
-                    {!! Form::input('hidden','controller', 'tag', ['id' => 'controller']) !!}
                     <div class="form-group">
                         {!! Form::label('title', 'Título') !!}
                         {!! Form::input('text', 'title', null, ['class' =>'form-control', 'autofocus']) !!}
-                        <div class='input-group mb-2 mb-sm-0 text-danger' id='error-title'></div>
+                        @if ($errors->has('title'))
+                            <span class="invalid-feedback" style="display: block;" role="alert">
+                                <strong>{{ $errors->first('title') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     <div class="form-group">
                         {!! Form::label('url', 'Url') !!}
                         {!! Form::input('text', 'url', null, ['class' =>'form-control', 'autofocus']) !!}
-                        <div class='input-group mb-2 mb-sm-0 text-danger' id='error-url'></div>
+                        @if ($errors->has('url'))
+                            <span class="invalid-feedback" style="display: block;" role="alert">
+                                <strong>{{ $errors->first('url') }}</strong>
+                            </span>
+                        @endif
                     </div>
                     {!! Form::submit('Salvar', ['class' => 'btn btn-primary']) !!}
                 {!! Form::close() !!}

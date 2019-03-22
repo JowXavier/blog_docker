@@ -2,118 +2,129 @@
 
 namespace Blog\Http\Controllers;
 
-use Blog\Tag;
 use Illuminate\Http\Request;
-
-/*!
- *  ESTA CLASSE TEM POR RESPONSABILIDADE CONTROLAR TODAS AS AÇÕES REFERENTE AS TAGS.
- * */
+use Blog\Http\Requests\TagRequest;
+use Blog\Services\TagService;
 
 class TagController extends Controller
 {
-    public function __construct()
+    private $tagService;
+    /**
+    * Cria uma nova instância do controlador.
+    */
+    public function __construct(TagService $tagService)
     {
         $this->middleware('auth');
+
+        $this->tagService = $tagService;
     }
-    /*!
-     *  RESPONSÁVEL POR SOLICITAR O CARREGAMENTO DE TODAS AS TAGS CADASTRADAS
-     * E ENVIA-LAS A VIEW.
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $tags = Tag::where('active', 1)->get();
-        return view("tags.index", ['tags' => $tags]);
+        $tags = $this->tagService->list();
+        return view('tags.index', compact('tags'));
     }
-    /*!
-     *  RESPONSÁVEL POR CARREGAR O FORMULÁRIO DE CADASTRO DE TAG.
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-       return view("tags.create_edit");
+        return view('tags.create_edit');
     }
-    /*!
-     *  RESPONSÁVEL POR SOLICITAR O CARREGAMENTO DOS DADOS DE UMA TAG
-     *  E ENVIA-LOS A VIEW.
+
+    /**
+     * Store a newly created resource in storage.
      *
-     *  $id -> Id da tag a ser editada.
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(TagRequest $request)
+    {
+        try{
+            \DB::transaction(function () use ($request) {
+                $this->tagService->create($request->all());
+            });
+            session()->flash('msg', 'Tag cadastrada com sucesso.');
+
+            return redirect()->route('tag.index');
+        } catch (\Exception $e) {
+            return redirect()->route('tag.create')
+                ->with('error', $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $tag = $this->tagService->get($id);
+        $posts = $this->tagService->postsTag($id);
+
+        return view('tags.details', compact('tag', 'posts'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $tag = Tag::findOrFail($id);
-        return view("tags.create_edit", ['tag' => $tag]);
+        $tag = $this->tagService->get($id);
+
+        return view("tags.create_edit", compact('tag'));
     }
-    /*!
-     *  RESPONSÁVEL POR VALIDAR OS CAMPOS DO FORMULÁRIO.
+
+    /**
+     * Update the specified resource in storage.
      *
-     *  $request -> Contém os campos a serem validados.
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function validar($request)
+    public function update(TagRequest $request, $id)
     {
-        $tagTitle = Tag::where('title', $request->title)->first();
-        $tagUrl = Tag::where('url', $request->url)->first();
+        try{
+            \DB::transaction(function () use ($request, $id) {
+                $this->tagService->update($request->all(), $id);
+            });
+                session()->flash('msg', 'Tag editada com sucesso.');
 
-        if(empty($request->title))
-            return "Informe o título da tag";
-        else if(!empty($tagTitle) && $request->id != $tagTitle->id)
-            return "Já existe uma tag cadastrada com este título";
-        else if(empty($request->url))
-            return "Informe a url da tag";
-        else if(!empty($tagUrl) && $request->id != $tagUrl->id)
-            return "Já existe uma tag cadastrada com esta Url";
-        return "sucesso";
-    }
-    /*!
-     *  RESPONSÁVEL POR COLETAR OS DADOS ENVIADOS PELO FORMULÁRIO.
-     *
-     * $request -> Contém os campos enviados pelo formulário.
-     */
-    public function store(Request $request)
-    {
-        $resultado = $this->validar($request);
-
-        /*$validacao = $request->validate([
-            'title' => 'required',
-            'url' => 'required',
-        ]);*/
-
-        if($resultado == "sucesso")
-        {
-            if (!isset($request->id))
-                Tag::create($request->all());
-            else {
-                $tag = Tag::findOrFail($request->id);
-                $tag->update($request->all());
-            }
+            return redirect()->route('tag.index');
+        } catch (\Exception $e) {
+            return redirect()->route('tag.create')
+                ->with('error', $e->getMessage())
+                ->withInput();
         }
-        $arr = array('response' => $resultado);
-        header('Content-Type: application/json');
-        echo json_encode($arr);
     }
-    /*!
-     *  RESPONSÁVEL POR SOLICITAR A "EXCLUSÃO" DE UM REGISTRO.
-     *  $id -> Id do registro a ser "apagado".
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy($id)
     {
-        $tag = Tag::findOrFail($id);
-        $tag->active = 0;
-        $tag->update();
+        $this->tagService->destroy($id);
 
         $resultado = "sucesso";
         $arr = array('response' => $resultado);
         header('Content-Type: application/json');
         echo json_encode($arr);
-    }
-    /*!
-     *  RESPONSÁVEL POR SOLICITAR O CARREGAMENTO DE UMA TAG E DOS POSTS
-     *  RELACIONADOS A ELA E ENVIAR OS DADOS PARA A VIEW.
-     *
-     *  $id -> Id da tag.
-     */
-    public function detail($id)
-    {
-        $tag = Tag::findOrFail($id);
-        $posts = Tag::find($id)->posts;
-        return view("tags.details", ['tag' => $tag, 'posts' => $posts]);
     }
 }

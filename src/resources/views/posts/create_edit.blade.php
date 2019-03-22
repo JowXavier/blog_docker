@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="container-fluid ">
+    @if( session( 'error' ) )
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="row justify-content-center p-5">
         <div class='col-lg-12 p-0'>
             <nav aria-label='breadcrumb'>
@@ -18,31 +23,28 @@
                 </a>
             </div>
             <br />
-            @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
             @if(!isset($post->id))
-                {!! Form::open(['url' => 'post/store', 'id' => 'form_cadastro_post', 'name' => 'form_cadastro', 'enctype' => 'multipart/form-data']) !!}
+            {!! Form::open(['route' => 'post.store']) !!}
             @else
-                {!! Form::model($post, ['url' => 'post/store/', 'id' => 'form_cadastro_post', 'name' => 'form_cadastro', 'enctype' => 'multipart/form-data']) !!}
-                {!! Form::input('hidden','id', $post->id) !!}
+                {!! Form::model($post, ['method' => 'PATCH', 'route' => ['post.update', $post->id]]) !!}
             @endif
-            {!! Form::input('hidden','controller', 'post', ['id' => 'controller']) !!}
             <div class="form-group">
                 {!! Form::label('title', 'Título') !!}
                 {!! Form::input('text', 'title', null, ['class' =>'form-control', 'autofocus']) !!}
-                <div class='input-group mb-2 mb-sm-0 text-danger' id='error-title'></div>
+                @if ($errors->has('title'))
+                    <span class="invalid-feedback" style="display: block;" role="alert">
+                        <strong>{{ $errors->first('title') }}</strong>
+                    </span>
+                @endif
             </div>
             <div class="form-group">
                 {!! Form::label('description', 'Descrição') !!}
                 {!! Form::textarea('description', null, ['id' => 'description', 'name' => 'description', 'class' => 'form-control','rows' => '20']) !!}
-                <div class='input-group mb-2 mb-sm-0 text-danger' id='error-description'></div>
+                @if ($errors->has('description'))
+                    <span class="invalid-feedback" style="display: block;" role="alert">
+                        <strong>{{ $errors->first('description') }}</strong>
+                    </span>
+                @endif
             </div>
             {!! Form::label('tags', 'Tags') !!}
             <div class="col-lg-12 bg-white rounded p-3">
@@ -52,7 +54,7 @@
                     <?php $checked = ""; ?>
                     @if(isset($postTags))
                         @foreach($postTags as $postTag)
-                            <?php if($tag->id == $postTag->tag_id) $checked = "checked"; ?>
+                            <?php if($tag->id == $postTag->id) $checked = "checked"; ?>
                         @endforeach
                     @endif
 

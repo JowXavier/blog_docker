@@ -2,6 +2,11 @@
 @section('content')
     @include('layouts.modal')
     <div class="container-fluid ">
+        @if(Session::has('msg'))
+            <div class="alert alert-success">
+                {{ Session::get('msg') }}
+            </div>
+        @endif
         <div class="row justify-content-center p-5">
             <div class='col-lg-12 p-0'>
                 <nav aria-label='breadcrumb'>
@@ -34,8 +39,8 @@
                                     <td>{{$tag->title}}</td>
                                     <td>{{$tag->url}}</td>
                                     <td class="text-right">
-                                        <a href="tag/edit/{{$tag->id}}" title="Editar" class="btn btn-sm text-danger"><i class="fas fa-edit"></i></a>
-                                        <a href="tag/detail/{{$tag->id}}" title="Visualizar" class="btn btn-sm text-danger"><i class="fas fa-info"></i></a>
+                                        <a href="tag/{{$tag->id}}/edit" title="Editar" class="btn btn-sm text-danger"><i class="fas fa-edit"></i></a>
+                                        <a href="tag/{{$tag->id}}" title="Visualizar" class="btn btn-sm text-danger"><i class="fas fa-info"></i></a>
                                         <button onclick="Main.confirm_delete({{$tag->id}})" title="Excluir" class="btn btn-sm text-danger" style="background-color: transparent;"><i class="fas fa-trash-alt"></i></button>
                                     </td>
                                 </tr>

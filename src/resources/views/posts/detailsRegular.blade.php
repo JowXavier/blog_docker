@@ -39,13 +39,16 @@
                         <div class="w-100">
                             @if(Auth::check())
                                 <br />
-                                {{Form::open(['url' => 'post/storeComment','id' => 'form_cadastro_comment', 'name' => 'form_cadastro'])}}
+                                {!! Form::open(['route' => 'comment.store']) !!}
                                 {!! Form::input('hidden','post_id', $post->id, ['id' => 'post_id']) !!}
-                                {!! Form::input('hidden','controller', 'post', ['id' => 'controller']) !!}
                                     <div class="form-group">
                                         {!! Form::label('description', 'Compartilhe conoso a sua opinião', ['class' => ' font-weight-bold']) !!}
                                         {!! Form::textarea('description', null, ['id' => 'description', 'name' => 'description', 'class' => 'form-control','rows' => '10', 'style' => 'resize: none;']) !!}
-                                        <div class='input-group mb-2 mb-sm-0 text-danger' id='error-description'></div>
+                                        @if ($errors->has('description'))
+                                            <span class="invalid-feedback" style="display: block;" role="alert">
+                                                <strong>{{ $errors->first('description') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
                                 {!! Form::submit('Enviar', ['class' => 'btn btn-primary']) !!}
                                 {{Form::close()}}
