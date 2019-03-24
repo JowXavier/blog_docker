@@ -3,6 +3,7 @@
 namespace Blog\Http\Controllers\Auth;
 
 use Blog\User;
+use Blog\TipoUsuario;
 use Blog\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -23,6 +24,11 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+    public function showRegistrationForm()
+    {
+        $tipos = TipoUsuario::all();
+        return view('auth.register', compact('tipos'));
+    }
     /**
      * Where to redirect users after registration.
      *

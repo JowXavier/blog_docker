@@ -34,7 +34,7 @@
                                 Posts com esta tag
                             </td>
                             <td>
-                                @foreach($posts as $post)
+                                @foreach($tag->posts as $post)
                                     {{$post->title}}
                                     <br />
                                 @endforeach

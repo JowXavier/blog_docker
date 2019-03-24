@@ -23,4 +23,9 @@ class CommentRepository
     {
         $this->model->create($data);
     }
+
+    public function list()
+    {
+        return $this->model->where('active', 1)->get();
+    }
 }

@@ -71,9 +71,8 @@ class TagController extends Controller
     public function show($id)
     {
         $tag = $this->tagService->get($id);
-        $posts = $this->tagService->postsTag($id);
 
-        return view('tags.details', compact('tag', 'posts'));
+        return view('tags.details', compact('tag'));
     }
 
     /**

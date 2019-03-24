@@ -52,8 +52,8 @@
                 @foreach($tags as $tag)
 
                     <?php $checked = ""; ?>
-                    @if(isset($postTags))
-                        @foreach($postTags as $postTag)
+                    @if(isset($post))
+                        @foreach($post->tags as $postTag)
                             <?php if($tag->id == $postTag->id) $checked = "checked"; ?>
                         @endforeach
                     @endif

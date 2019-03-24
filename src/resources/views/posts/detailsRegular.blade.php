@@ -6,7 +6,7 @@
                 <div class="row p-2 justify-content-center">
                     <div class="col-md-12">
                         <p>
-                            Por: {{$post->user->name}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fas fa-calendar-alt"></i>
+                            Por: {{$post->usuario->name}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fas fa-calendar-alt"></i>
                             {{ date( 'd/m/Y H:i' , strtotime($post->created_at))}}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="#description" class="text-dark">
                                 <i class="fas fa-comments"></i>
@@ -32,7 +32,7 @@
                             <br />
                             <label>Tags</label>
                             <br />
-                            @foreach($tags as $tag)
+                            @foreach($post->tags as $tag)
                                 <div class="d-inline-block"><h1><span class="badge badge-primary ">{{$tag->title}}</span></h1></div>
                             @endforeach
                         </div>
@@ -60,13 +60,13 @@
                         <br />
                         <div class="w-100 p-3" style="border: 1px solid black;">
                             <label>Todos os comentários</label>
-                            @foreach($comments as $comment)
+                            @foreach($post->comments as $comment)
                                 <tr>
                                     <td>
                                         <div class="card border-secondary mb-3 text-primary" style="max-width: 100%;">
-                                            <div class="card-header">{{$comment->user->name}} - {{ date( 'd/m/Y H:i:s' , strtotime($comment->created_at))}}</div>
+                                            <div class="card-header">{{$comment->usuario->name}} - {{ date( 'd/m/Y H:i:s' , strtotime($comment->created_at))}}</div>
                                             <div class="card-body text-primary">
-                                                <h5 class="card-title">{{$comment->user->email}}</h5>
+                                                <h5 class="card-title">{{$comment->usuario->email}}</h5>
                                                 <p class="card-text">{{$comment->description}}</p>
                                             </div>
                                         </div>
@@ -74,7 +74,7 @@
                                 </tr>
                             @endforeach
                             <br />
-                            <?php  if(count($comments) == 0) echo "<h4 class='text-center'>Não existe comentários para esta publicação. Seja o primeiro a comentar.<h4>"; ?>
+                            <?php  if(count($post->comments) == 0) echo "<h4 class='text-center'>Não existe comentários para esta publicação. Seja o primeiro a comentar.<h4>"; ?>
                         </div>
                     </div>
                 </div>

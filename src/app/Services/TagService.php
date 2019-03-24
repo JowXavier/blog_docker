@@ -1,8 +1,6 @@
 <?php
 
 namespace Blog\Services;
-
-use Blog\Tag;
 use Blog\Repositories\TagRepository;
 
 class TagService
@@ -20,7 +18,7 @@ class TagService
      */
     public function list()
     {
-        return Tag::where('active', 1)->get();
+        return $this->repository->list();
     }
 
     /**
@@ -30,7 +28,7 @@ class TagService
      */
     public function get($id)
     {
-        return Tag::findOrFail($id);
+        return $this->repository->get($id);
     }
 
     /**
@@ -62,15 +60,5 @@ class TagService
     public function destroy($id)
     {
         $this->repository->destroy($id);
-    }
-
-   /**
-     * Retorna todos os posts associados a uma tag.
-     *
-     * @param mixed $id
-     */
-    public function postsTag($id)
-    {
-        return $this->repository->postsTag($id);
     }
 }

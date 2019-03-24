@@ -15,6 +15,16 @@ class PostRepository
         $this->model = $model;
     }
 
+    public function list()
+    {
+        return $this->model->where('active', 1)->get();
+    }
+
+    public function get($id)
+    {
+        return $this->model->findOrFail($id);
+    }
+
     public function create($data)
     {
         $post = $this->model->create($data);
@@ -42,20 +52,5 @@ class PostRepository
         $post = $this->model->findOrFail($id);
         $post->active = 0;
         $post->update($post->toArray());
-    }
-
-    public function postUser($id)
-    {
-        return $this->model->find($id)->usuario;
-    }
-
-    public function comments($id)
-    {
-        return $this->model->find($id)->comments;
-    }
-
-    public function tags($id)
-    {
-        return $this->model->find($id)->tags;
     }
 }

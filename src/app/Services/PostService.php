@@ -2,8 +2,6 @@
 
 namespace Blog\Services;
 
-use Blog\Post;
-use Blog\PostTag;
 use Blog\Repositories\PostRepository;
 
 class PostService
@@ -21,7 +19,7 @@ class PostService
      */
     public function list()
     {
-        return Post::where('active', 1)->get();
+        return $this->repository->list();
     }
 
     /**
@@ -31,7 +29,7 @@ class PostService
      */
     public function get($id)
     {
-        return Post::findOrFail($id);
+        return $this->repository->get($id);
     }
 
     /**
@@ -63,35 +61,5 @@ class PostService
     public function destroy($id)
     {
         $this->repository->destroy($id);
-    }
-
-    /**
-     * Busca dados do usuário no relacionamento.
-     *
-     * @param mixed $id
-     */
-    public function postUser($id)
-    {
-       return $this->repository->postUser($id);
-    }
-
-    /**
-     * Busca dados do usuário no relacionamento.
-     *
-     * @param mixed $id
-     */
-    public function comments($id)
-    {
-        return $this->repository->comments($id);
-    }
-
-    /**
-     * Busca dados do usuário no relacionamento.
-     *
-     * @param mixed $id
-     */
-    public function tags($id)
-    {
-        return $this->repository->tags($id);
     }
 }

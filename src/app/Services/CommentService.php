@@ -14,16 +14,6 @@ class CommentService
         $this->repository = $repository;
     }
 
-    /**
-     * Busca dados do usuário no relacionamento de comentário com usuário.
-     *
-     * @param mixed $id
-     */
-    public function usuario($id)
-    {
-        return $this->repository->usuario($id);
-    }
-
      /**
      * Cria um um registro no banco de dados.
      *
@@ -33,4 +23,14 @@ class CommentService
     {
         $this->repository->create($data);
     }
+
+    /**
+     * Busca todos os registros de tags.
+     *
+     */
+    public function list()
+    {
+        return $this->repository->list();
+    }
+
 }

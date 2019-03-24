@@ -37,7 +37,7 @@
                         @foreach($posts as $post)
                             <tr>
                                 <td>{{$post->title}}</td>
-                                <td>{{$post->user->name}}</td>
+                                <td>{{$post->usuario->name}}</td>
                                 <td class="text-right">
                                     <a href="post/{{$post->id}}/edit" title="Editar" class="btn btn-sm text-danger"><i class="fas fa-edit"></i></a>
                                     <a href="post/{{$post->id}}" title="Visualizar" class="btn btn-sm text-danger"><i class="fas fa-info"></i></a>

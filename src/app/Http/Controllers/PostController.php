@@ -6,23 +6,20 @@ use Illuminate\Http\Request;
 use Blog\Http\Requests\PostRequest;
 use Blog\Services\PostService;
 use Blog\Services\TagService;
-use Blog\Services\CommentService;
 use Auth;
 
 class PostController extends Controller
 {
     private $postService;
-    private $commentService;
     private $tagService;
     /**
     * Cria uma nova instância do controlador.
     */
-    public function __construct(PostService $postService, CommentService $commentService, TagService $tagService)
+    public function __construct(PostService $postService, TagService $tagService)
     {
         $this->middleware('auth');
 
         $this->postService = $postService;
-        $this->commentService = $commentService;
         $this->tagService = $tagService;
     }
 
@@ -34,8 +31,6 @@ class PostController extends Controller
     public function index()
     {
         $posts = $this->postService->list();
-        foreach($posts as $post)
-            $post->user = $this->postService->postUser($post->id);
 
         return view('posts.index', compact('posts'));
     }
@@ -47,8 +42,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        $tService = new TagService();
-        $tags = $tService->list();
+        $tags = $this->tagService->list();
         return view('posts.create_edit', compact('tags'));
     }
 
@@ -84,14 +78,8 @@ class PostController extends Controller
     public function show($id)
     {
         $post = $this->postService->get($id);
-        $tags = $this->postService->tags($id);
 
-        $comments = $this->postService->comments($id);
-
-        foreach($comments as $comment)
-            $comment->user = $this->commentService->usuario($comment->user_id);
-
-        return view('posts.details', compact('post', 'tags', 'comments'));
+        return view('posts.details', compact('post'));
     }
 
     /**
@@ -104,10 +92,9 @@ class PostController extends Controller
     {
         $post = $this->postService->get($id);
 
-        $postTags = $this->postService->tags($id);
         $tags = $this->tagService->list();
 
-        return view('posts.create_edit', compact('post', 'tags', 'postTags'));
+        return view('posts.create_edit', compact('post', 'tags'));
     }
 
     /**
@@ -158,15 +145,7 @@ class PostController extends Controller
     public function detailRegular($id)
     {
         $post = $this->postService->get($id);
-        $post->user = $this->postService->postUser($post->id);
 
-        $tags = $this->postService->tags($id);
-
-        $comments = $this->postService->comments($id);
-
-        foreach($comments as $comment)
-            $comment->user = $this->commentService->usuario($comment->user_id);
-
-        return view('posts.detailsRegular', compact('post', 'tags', 'comments'));
+        return view('posts.detailsRegular', compact('post'));
     }
 }

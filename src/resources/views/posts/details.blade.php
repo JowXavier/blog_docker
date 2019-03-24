@@ -29,7 +29,7 @@
                         </tr>
                         <tr>
                             <td>
-                                @foreach($tags as $tag)
+                                @foreach($post->tags as $tag)
                                     <div class="d-inline-block"><h1><span class="badge badge-primary ">{{$tag->title}}</span></h1></div>
                                 @endforeach
                             </td>
@@ -37,13 +37,13 @@
                         <tr>
                             <td>Comentários</td>
                         </tr>
-                            @foreach($comments as $comment)
+                            @foreach($post->comments as $comment)
                                 <tr>
                                     <td>
                                         <div class="card border-secondary mb-3 text-primary" style="max-width: 100%;">
-                                            <div class="card-header">{{$comment->user->name}} - {{ date( 'd/m/Y H:i:s' , strtotime($comment->created_at))}}</div>
+                                            <div class="card-header">{{$comment->usuario->name}} - {{ date( 'd/m/Y H:i:s' , strtotime($comment->created_at))}}</div>
                                             <div class="card-body text-primary">
-                                                <h5 class="card-title">{{$comment->user->email}}</h5>
+                                                <h5 class="card-title">{{$comment->usuario->email}}</h5>
                                                 <p class="card-text">{{$comment->description}}</p>
                                             </div>
                                         </div>

@@ -13,6 +13,16 @@ class TagRepository
         $this->model = $model;
     }
 
+    public function list()
+    {
+        return $this->model->where('active', 1)->get();
+    }
+
+    public function get($id)
+    {
+        return $this->model->findOrFail($id);
+    }
+
     public function create($data)
     {
         $tag = $this->model->create($data);
@@ -29,10 +39,5 @@ class TagRepository
         $tag = $this->model->findOrFail($id);
         $tag->active = 0;
         $tag->update($tag->toArray());
-    }
-
-    public function postsTag($id)
-    {
-        return Tag::find($id)->posts;
     }
 }
